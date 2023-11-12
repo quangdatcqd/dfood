@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://192.168.1.3:8080/baemin_server/index.php'; // Thay thế bằng URL cơ sở của API bạn đang sử dụng
-// const BASE_URL = 'https://food.cqdgo.com/v1/index.php'; // Thay thế bằng URL cơ sở của API bạn đang sử dụng
+// const BASE_URL = 'http://192.168.1.3:8080/baemin_server/index.php'; // Thay thế bằng URL cơ sở của API bạn đang sử dụng
+const BASE_URL = 'https://food.cqdgo.com/v1/index.php'; // Thay thế bằng URL cơ sở của API bạn đang sử dụng
 
 const Client = axios.create({
     baseURL: BASE_URL,

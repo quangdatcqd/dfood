@@ -14,8 +14,8 @@ const Head1 = () => {
     const [searchValue, setSearchValue] = useState("");
     const [searchData, setSearchData] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [openDialog, setOpenDialog] = useState(true);
-    const [showBoxSearch, setShowBoxSearch] = useState(true);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [showBoxSearch, setShowBoxSearch] = useState(false);
     const [listKeyword, setListKeyword] = useState([
         "Cơm", "Bún đậu", "Bánh tráng", "Chè", "Bánh", "Cơm gà", "Mì",
         "Gà rán", "Cà phê", "Hàn Quốc", "Cơm tấm", "Pizza", "Cháo",
