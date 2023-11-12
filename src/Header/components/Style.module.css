@@ -1,0 +1,246 @@
+.headerDivSearch {
+    width: 370px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff !important;
+}
+
+.headerInput {
+    width: calc(100% - 80px);
+    border: 0px;
+    border-radius: 50px;
+    font-size: 16px;
+    padding: 10px 40px;
+    font-weight: bold;
+    outline: none;
+    color: #896E5B !important;
+    background-color: rgb(255, 250, 246);
+    /* box-shadow: 1px 1px 0px 1px #fcfcfc; */
+    /* border-bottom: 2px solid rgb(255, 255, 255); */
+    /* color: #13C0BF; */
+}
+
+.FmdGoodIcon {
+    position: absolute;
+    left: 15px;
+    top: 9px;
+    font-size: 20px !important;
+    color: #13C0BF;
+}
+
+.ClearLocationIcon {
+    position: absolute;
+    right: 10px;
+    top: 9px;
+    color: #13C0BF;
+    font-size: 20px !important;
+    cursor: pointer;
+}
+
+.headerSearchBox {
+    position: absolute;
+    top: 45px;
+    left: 0px;
+    width: 100%;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 1px 1px 1px 1px #fcfcfc;
+    overflow: hidden;
+    color: rgb(98, 98, 98);
+    font-family: sans-serif;
+}
+
+
+.headerSearchItem {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: #f0f0f0 1px solid;
+
+}
+
+.headerSearchItem p {
+    margin: 5px 0px;
+    font-weight: 600;
+    color: #109c9c;
+}
+
+.headerSearchItem span {
+    font-size: 14px;
+    color: black;
+}
+
+.headerSearchItem:hover {
+    background-color: #f7f7f7;
+}
+
+.headerInput:focus .headerSearchBox {
+    color: red;
+}
+
+
+
+
+
+
+/* Notification */
+.headerButton {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    position: relative;
+    float: right;
+    padding: 0px 20px;
+
+}
+
+.HeaderNotiBox, .HeaderOrderBox {
+    width: 400px;
+    min-height: 200px;
+    background-color: rgb(255, 248, 244);
+    border-radius: 10px;
+    position: absolute;
+    top: 80px;
+    box-shadow: 0px 0px 3px 0px #e2e2e2;
+    display: none;
+
+}
+
+.HeaderNotiBox>p, .HeaderOrderBox>p {
+    color: black;
+    font-size: 16px;
+    margin: 10px 0px 5px 10px;
+    padding-bottom: 5px;
+    border-bottom: 3px rgb(246, 246, 246) solid;
+}
+
+.HeaderNotiItem {
+    color: black;
+    border-bottom: 1px rgb(241, 241, 241) solid;
+    padding: 10px 15px;
+
+}
+
+
+
+.HeaderNotiItem:hover {
+    background-color: #f3f3f3 !important;
+}
+
+.HeaderNotiItem>p {
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: 2px;
+}
+
+.HeaderNotiItem>span {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+
+.headerButton:nth-child(4):hover .HeaderNotiBox {
+    display: block;
+}
+
+
+.headerButton:nth-child(3):hover .HeaderOrderBox {
+    display: block;
+}
+
+
+
+.boxLogin {
+    padding: 40px 50px;
+    padding-bottom: 40px;
+    width: 300px;
+    border-radius: 30px !important;
+}
+
+.titleLogin {
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 30px;
+    text-transform: uppercase;
+    font-weight: bolder;
+    color: #13C0BF;
+    margin: 0px;
+    margin-bottom: 10px;
+
+}
+
+@media screen and (max-width:690px) {
+    .headerDivSearch {
+        width: 300px;
+    }
+
+    .headerInput {
+        padding: 8px 25px 5px 25px;
+        font-size: 14px;
+        width: calc(100% - 50px);
+    }
+
+    .FmdGoodIcon {
+        left: 7px;
+        top: 8px;
+        font-size: 15px !important;
+    }
+
+    .ClearLocationIcon {
+        right: 8px;
+        top: 5px;
+    }
+}
+
+
+@media screen and (max-width:505px) {
+    .headerDivSearch {
+        width: 100%;
+
+    }
+
+    .headerSearchBox {
+        top: 35px;
+    }
+
+
+    .headerSearchItem p {
+        font-size: 14px;
+        margin: 0px 1px;
+    }
+
+    .headerSearchItem span {
+        font-size: 12px;
+
+    }
+
+    .headerInput {
+        /* box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.25); */
+        padding: 8px 25px 8px 25px;
+        color: #ffffff !important;
+        background-color: rgb(229 229 229 / 42%);
+        color: rgb(75, 75, 75) !important;
+        /* border-radius: 0px; */
+        font-size: 12px;
+    }
+
+    .FmdGoodIcon {
+        left: 7px;
+        top: 6px;
+        font-size: 15px !important;
+        color: #20c0bf !important;
+    }
+
+    .ClearLocationIcon {
+
+        top: 7px;
+        font-size: 16px !important;
+    }
+}

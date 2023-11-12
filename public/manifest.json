@@ -1,21 +1,26 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "DFood",
+  "name": "DFood - Giao đồ ăn",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "60x50",
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
+      "src": "assets/logo/logo_small.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "60x50"
     },
     {
-      "src": "logo512.png",
+      "src": "assets/logo/logo_medium.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "112x100"
+    },
+    {
+      "src": "assets/logo/logo_large.png",
+      "type": "image/png",
+      "sizes": "600x450"
     }
   ],
   "start_url": ".",
