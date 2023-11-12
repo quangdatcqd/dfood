@@ -1,63 +1,127 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.css';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { Dialog } from '@mui/material';
 import ShoppingBasketOutlinedIcon from '@mui/icons-material/ShoppingBasketOutlined';
 import StarIcon from "../../assets/images/start.png"
 import VoucherIcon from "../../assets/images/1.png"
+import partnerIcon from "../../assets/images/partner_logo.png"
 import GroupAddOutlinedIcon from '@mui/icons-material/GroupAddOutlined';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { RestaurantAPI } from '../../HTTP/BaeminHttp';
 
-const Restaurant = ({ data, open, setOpen }) => {
+const Restaurant = ({ idRestaurant, open, setOpen }) => {
     const matches = useMediaQuery('(max-width:500px)');
     const matchesMD = useMediaQuery('(max-width:770px)');
 
+    const [dataRestaurant, setDataRestaurant] = useState(null);
+    useEffect(() => {
+        (!dataRestaurant && idRestaurant) && setOpen(false)
+        setDataRestaurant([])
+        const fetchRestaurant = async () => {
+            const data = await RestaurantAPI.getRestaurant(idRestaurant);
+            setDataRestaurant(data)
+        }
+        fetchRestaurant();
+    }, [idRestaurant]);
     return (
-        <Dialog open={open} setOpen={setOpen} maxWidth={"xl"} fullWidth={true} fullScreen={matchesMD || matches}>
-            <div className='container'>
-                <p className='btnCloseDialog' > <KeyboardBackspaceIcon sx={{ color: "#13C0BF", cursor: "pointer" }} onClick={() => setOpen(false)} /></p>
-                <div className='listRestaurant'>
-                    <div className='boxRestaurantInfo'>
-                        <img src="https://static.baemin.vn/CH/StoreList/060807-20211028/b3bbae15-9cff-4336-b5fe-735dd008af49/store_main.jpg" alt="" />
-                        <div className='divRestaurantInfo'>
-                            <div className='divRestaurantDes'>
-                                <p className='partnerTitle'>ĐỐI TÁC CỦA BAEMIN </p>
-                                <p className='restaurantName'>Bánh Mì Bình Định 77 - Nguyễn Văn Khối</p>
-                                <p className='restaurantProperty'>0.1km - 479 Nguyễn Văn Khối, Phường 8, Quận Gò Vấp, Tp HCM</p>
-                                <p className='restaurantProperty' style={{ color: "red", fontWeight: "bold" }}>Tạm đóng cửa đến 23:59</p>
-                            </div>
-                        </div>
-                        <div className='restaurantGrBook'>
+        <Dialog open={open} onClose={() => setOpen(false)} setOpen={setOpen} maxWidth={"xl"} fullWidth={true} fullScreen={matchesMD || matches}>
+            <div className='containerInfo'>
+                {dataRestaurant &&
+                    <div className='boxRestaurant'>
+                        <div className='boxRestaurantInfo'>
+                            <p className='btnCloseDialog' > <KeyboardBackspaceIcon sx={{ color: "white", cursor: "pointer", margin: "5px 8px", fontSize: "28px" }} onClick={() => setOpen(false)} /></p>
 
-                            <span>   <GroupAddOutlinedIcon style={{ fontSize: "18px", marginBottom: "-4px", paddingRight: "5px" }} />Đơn nhóm</span>
-                            <span>Tạo đơn</span>
-                        </div>
-                        <div className='restaurantCoupon'>
-                            <p> <img src={VoucherIcon} alt="" /><span> BAEMIN Khao Thêm 50K Cho Đơn Từ 199K nhóm</span></p>
-                            <span>Xem thêm</span>
-                        </div>
-                        <div className='restaurantReview'>
-                            <div className='restaurantRvProperty'>
-                                <img src={StarIcon} alt="" />
-                                <p>   &nbsp;
-                                    <b>4.0</b>&nbsp;-&nbsp;<span style={{ fontWeight: "normal" }}> 999+ </span>
-                                    &nbsp;.
-                                    &nbsp;
-                                    <ShoppingBasketOutlinedIcon style={{ fontSize: "20px", marginTop: "-4px" }} />
-                                    &nbsp;
-                                    <span style={{ fontWeight: "normal" }}> 999+ </span> &nbsp; đã bán
-                                </p>
+                            <img src={dataRestaurant?.imageUrl} alt="" />
+
+                            <div className='divRestaurantInfo'>
+                                <div className='divRestaurantDes'>
+
+                                    <p className='partnerTitle'>
+                                        <img src={partnerIcon} alt="" />
+                                        {
+                                            dataRestaurant?.isPartner &&
+                                            "ĐỐI TÁC CỦA BAEMIN  "
+                                        }</p>
+                                    <p className='restaurantName'>{dataRestaurant?.name}</p>
+                                    <p className='restaurantProperty'>{(dataRestaurant?.distance / 1000).toFixed(2)}km - {dataRestaurant?.name}</p>
+                                    <p className='restaurantProperty' style={{ color: "red", fontWeight: "bold" }}>{
+                                        !dataRestaurant?.isAvailable ? (dataRestaurant?.closeReason ? dataRestaurant?.closeReason : "Nhà hàng đóng cửa") : '*'
+                                    }</p>
+
+                                </div>
                             </div>
-                            <span style={{ cursor: "pointer" }}>Xem đánh giá</span>
+
+                            <div className='divRestaurantDes1'>
+                                <div className='restaurantGrBook'>
+
+                                    <span>   <GroupAddOutlinedIcon style={{ fontSize: "18px", marginBottom: "-3px", paddingRight: "5px" }} />Đơn nhóm</span>
+                                    <span>Tạo đơn</span>
+                                </div>
+                                {
+                                    dataRestaurant?.coupons?.items?.length > 0 &&
+                                    <div className='restaurantCoupon'>
+                                        <p> <img src={VoucherIcon} alt="" /><span> {dataRestaurant?.coupons?.items[0]?.name}</span></p>
+                                        <span>Xem thêm</span>
+                                    </div>
+                                }
+
+                                <div className='restaurantReview'>
+                                    <div className='restaurantRvProperty'>
+                                        <img src={StarIcon} alt="" />
+                                        <p>   &nbsp;
+                                            <b>{dataRestaurant?.rating?.score}</b>&nbsp;-&nbsp;<span style={{ fontWeight: "normal" }}> {dataRestaurant?.rating?.totalRatings}</span>
+                                            &nbsp;.
+                                            &nbsp;
+                                            <ShoppingBasketOutlinedIcon style={{ fontSize: "20px", marginTop: "-4px" }} />
+                                            &nbsp;
+                                            <span style={{ fontWeight: "normal" }}> {dataRestaurant?.rating?.totalOrders} </span> &nbsp; đã bán
+                                        </p>
+                                    </div>
+                                    <span style={{ cursor: "pointer" }}>Xem đánh giá</span>
+                                </div>
+                            </div>
+                            {/* <div className='dialogCustom'></div> */}
                         </div>
-                        {/* <div className='dialogCustom'></div> */}
+                        <div className='boxRestaurantDis'>
+                            {
+                                dataRestaurant?.sections?.map((section, index) => {
+                                    const isShowCurrentBox = dataRestaurant?.dishes?.find((item) => item?.sectionId === section?.id)
+                                    if (isShowCurrentBox)
+                                        return <div className={"sectionDishes"} key={index} >
+                                            <p className='sectionDishesTitle'>{section?.name}</p>
+                                            <div className='boxRestaurantItem'>
+                                                {
+                                                    dataRestaurant?.dishes?.map((item, index) => {
+                                                        if (item?.sectionId === section?.id) {
+                                                            return <div className="restaurantDishesBox" key={index}>
+                                                                <img src={item?.imageUrl} />
+                                                                <div >
+                                                                    <p>{item?.name}</p>
+                                                                    <p><i><strike>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</strike></i>  </p>
+                                                                    <p style={{ fontWeight: 'bold' }}>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
+                                                                </div>
+                                                            </div>
+                                                        }
+
+                                                    })
+                                                }
+                                            </div>
+                                        </div>
+
+                                })
+                            }
+                        </div>
+
                     </div>
-
-                </div>
-
+                }
             </div>
+
+
         </Dialog>
     );
 }
+
+
 
 export default Restaurant;

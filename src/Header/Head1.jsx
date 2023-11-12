@@ -16,6 +16,7 @@ const Head1 = () => {
     const [loading, setLoading] = useState(false);
     const [openDialog, setOpenDialog] = useState(false);
     const [showBoxSearch, setShowBoxSearch] = useState(false);
+    const [restaurantSelected, setRestaurantSelected] = useState("");
     const [listKeyword, setListKeyword] = useState([
         "Cơm", "Bún đậu", "Bánh tráng", "Chè", "Bánh", "Cơm gà", "Mì",
         "Gà rán", "Cà phê", "Hàn Quốc", "Cơm tấm", "Pizza", "Cháo",
@@ -26,16 +27,20 @@ const Head1 = () => {
     ]);
 
     const fetchSearch = useDebouncedCallback(async () => {
+        setShowBoxSearch(true)
         const dataSearch = await RestaurantAPI.searchRestaurant(searchValue);
         setLoading(false)
         setSearchData(dataSearch)
-    }, 300);
+
+    }, 100);
     const handleSearchInput = async (value) => {
+
         setSearchValue(value)
         if (value?.length > 2) {
             setLoading(true)
             await fetchSearch(value)
         }
+
     }
     const handleScroll = () => {
 
@@ -64,7 +69,7 @@ const Head1 = () => {
     const handleOutsideClick = (event) => {
         const searchLocationElement = document.getElementById('head1Row');
         if (!searchLocationElement.contains(event.target)) {
-            setShowBoxSearch(false)
+            !openDialog && setShowBoxSearch(false)
         }
     };
     useEffect(() => {
@@ -80,6 +85,7 @@ const Head1 = () => {
 
     const handleSelectRestaurant = (data) => {
         setOpenDialog(true)
+        setRestaurantSelected(data)
     }
     return (
         <div className={headerCss.head1Row} id='head1Row'>
@@ -113,7 +119,7 @@ const Head1 = () => {
                                             {searchData?.docs?.map((item, index) => {
 
                                                 return <div className={headerCss.searchItemResult} key={index} >
-                                                    <div className={headerCss.verticalItem} onClick={() => handleSelectRestaurant(item)}>
+                                                    <div className={headerCss.verticalItem} onClick={() => handleSelectRestaurant(item?.id)}>
 
                                                         {item?.provideCoupon && <div className={headerCss.promoIcon} style={{ fontSize: 14 }}>PROMO</div>}
                                                         <img className={headerCss.verticalItemImage} src={item?.imageUrl}></img>
@@ -180,7 +186,10 @@ const Head1 = () => {
                                             <div className={headerCss.boxRecentSearch}>
                                                 {
                                                     listKeyword?.map((item, index) => {
-                                                        return <p style={{ padding: "5px 10px" }} key={index} onClick={() => handleSearchInput(item)}>{item}</p>
+                                                        return <p style={{ padding: "5px 10px" }} key={index} onClick={() => {
+
+                                                            handleSearchInput(item)
+                                                        }}>{item}</p>
                                                     })
                                                 }
 
@@ -192,7 +201,7 @@ const Head1 = () => {
                     </div>
                 }
             </div>
-            <Restaurant open={openDialog} setOpen={setOpenDialog} />
+            <Restaurant open={openDialog} setOpen={setOpenDialog} idRestaurant={restaurantSelected} />
         </div>
     );
 }

@@ -77,6 +77,14 @@ export const RestaurantAPI = {
             url: `https://api.baemin.vn/v3/stores/search?coordinates=${XLocationEncode}&isExact=false&isGroupMerchant=true&keyword=${encodeURIComponent(searchValue)}&name=&page=1&target=all&type=MERCHANT`
         });
     },
+
+    getRestaurant: async (id) => {
+        return await Client.post("", {
+            type: "GET",
+            header: JSON.stringify(HEADER),
+            url: `https://api.baemin.vn/v3/stores/${id}?coordinates=${XLocation}`
+        });
+    },
 }
 
 

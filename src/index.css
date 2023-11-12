@@ -30,20 +30,23 @@ body {
   z-index: 0 !important;
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 5px;
-}
+
+
+@media screen and (min-width:690px) {
+
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
 
 
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #13C0BF;
-  border-radius: 10px;
-}
+  ::-webkit-scrollbar-thumb {
+    background: #13C0BF;
+    border-radius: 10px;
+  }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #198282;
+  ::-webkit-scrollbar-thumb:hover {
+    background: #198282;
+  }
 }
