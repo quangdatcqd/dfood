@@ -30,7 +30,7 @@ const Restaurant = ({ idRestaurant, open, setOpen }) => {
                 {dataRestaurant &&
                     <div className='boxRestaurant'>
                         <div className='boxRestaurantInfo'>
-                            <p className='btnCloseDialog' > <KeyboardBackspaceIcon sx={{ color: "white", cursor: "pointer", margin: "5px 8px", fontSize: "28px" }} onClick={() => setOpen(false)} /></p>
+                            <p className='btnCloseDialog' > <KeyboardBackspaceIcon className='CloseIconI' onClick={() => setOpen(false)} /></p>
 
                             <img src={dataRestaurant?.imageUrl} alt="" />
 
@@ -85,6 +85,36 @@ const Restaurant = ({ idRestaurant, open, setOpen }) => {
                         </div>
                         <div className='boxRestaurantDis'>
                             {
+                                dataRestaurant?.dishes?.find((item) => item?.isFeatured === true) &&
+                                <div className={"sectionDishes"}  >
+                                    <p className='sectionDishesTitle'>Nhất định phải thử</p>
+                                    <div className='boxRestaurantItem'>
+                                        {
+                                            dataRestaurant?.dishes?.map((item, index) => {
+                                                if (item?.isFeatured) {
+                                                    return <div className="restaurantDishesBox" key={index}>
+                                                        {
+                                                            item?.isSoldOut && <div className='layerSoldOut'></div>
+                                                        }
+                                                        <img src={item?.imageUrl} />
+                                                        <div className='resTaurantDisDes' >
+                                                            <p >{item?.name}</p>
+                                                            <p className='resTaurantDisDesP1'><i><strike>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</strike></i>  </p>
+                                                            <p className='resTaurantDisDesP1' style={{ fontWeight: 'bold' }}>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                            })
+                                        }
+                                    </div>
+                                </div>
+
+                            }
+
+
+
+                            {
                                 dataRestaurant?.sections?.map((section, index) => {
                                     const isShowCurrentBox = dataRestaurant?.dishes?.find((item) => item?.sectionId === section?.id)
                                     if (isShowCurrentBox)
@@ -95,11 +125,15 @@ const Restaurant = ({ idRestaurant, open, setOpen }) => {
                                                     dataRestaurant?.dishes?.map((item, index) => {
                                                         if (item?.sectionId === section?.id) {
                                                             return <div className="restaurantDishesBox" key={index}>
+                                                                {
+                                                                    item?.isSoldOut && <div className='layerSoldOut'></div>
+                                                                }
                                                                 <img src={item?.imageUrl} />
-                                                                <div >
-                                                                    <p>{item?.name}</p>
-                                                                    <p><i><strike>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</strike></i>  </p>
-                                                                    <p style={{ fontWeight: 'bold' }}>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
+                                                                <div className='resTaurantDisDes' >
+                                                                    <p className=' resTaurantDisDesP1 '>{item?.name}</p>
+                                                                    <p className='resTaurantDisDesP1 resTaurantDisDesP'>{item?.description?.replace(/\&nbsp;/g, " ")}</p>
+                                                                    <p className='resTaurantDisDesP1'><i><strike>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</strike></i>  </p>
+                                                                    <p className='resTaurantDisDesP1' style={{ fontWeight: 'bold' }}>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
                                                                 </div>
                                                             </div>
                                                         }

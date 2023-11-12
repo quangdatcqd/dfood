@@ -66,19 +66,11 @@ const Head1 = () => {
 
     }
 
-    const handleOutsideClick = (event) => {
-        const searchLocationElement = document.getElementById('head1Row');
-        if (!searchLocationElement.contains(event.target)) {
-            !openDialog && setShowBoxSearch(false)
-        }
-    };
-    useEffect(() => {
 
+    useEffect(() => {
         window.addEventListener('scroll', handleScroll);
-        window.addEventListener('click', handleOutsideClick);
         return () => {
             window.removeEventListener("scroll", handleScroll)
-            window.removeEventListener("click", handleOutsideClick)
         };
     }, []);
 
@@ -121,11 +113,13 @@ const Head1 = () => {
                                                 return <div className={headerCss.searchItemResult} key={index} >
                                                     <div className={headerCss.verticalItem} onClick={() => handleSelectRestaurant(item?.id)}>
 
-                                                        {item?.provideCoupon && <div className={headerCss.promoIcon} style={{ fontSize: 14 }}>PROMO</div>}
-                                                        <img className={headerCss.verticalItemImage} src={item?.imageUrl}></img>
-                                                        {
-                                                            !item?.isAvailable && <div className={headerCss.boxIsNotAv}>Đã đóng cửa</div>
-                                                        }
+                                                        <div className={headerCss?.verticalItemBoxImage}>
+                                                            {item?.provideCoupon && <div className={headerCss.promoIcon} style={{ fontSize: 14 }}>PROMO</div>}
+                                                            <img className={headerCss.verticalItemImage} src={item?.imageUrl}></img>
+                                                            {
+                                                                !item?.isAvailable && <div className={headerCss.boxIsNotAv}>Đã đóng cửa</div>
+                                                            }
+                                                        </div>
                                                         <div className={headerCss.verticalItemDe}>
                                                             <p className={headerCss.verticalItemDe1}>
                                                                 {

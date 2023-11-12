@@ -179,11 +179,16 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    top: -0px;
-    color: rgb(32 192 191);
+    top: -8px;
+    color: white;
     font-size: 20px !important;
     cursor: pointer;
     z-index: 1;
+    background-color: rgb(32 182 181);
+    border-radius: 50px;
+    padding: 5px;
+    box-shadow: 0px 2px 3px 0px rgb(0 0 0 / 10%);
+
 }
 
 
@@ -301,6 +306,9 @@
     border-radius: 10px;
     background-color: white;
     cursor: pointer;
+}
+
+.verticalItemBoxImage {
     position: relative;
 }
 
@@ -326,6 +334,8 @@
     text-align: center;
     color: white;
     padding: 0px 10px;
+    top: 0px;
+    left: 0px;
 }
 
 .searchItemResult {
