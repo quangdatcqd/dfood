@@ -3,7 +3,6 @@ import styleCss from './Style.module.css';
 
 import PersonIcon from '@mui/icons-material/Person';
 import Login from './Login';
-import DialogReponsive from '../../components/DialogReponsive';
 const HeaderProfile = () => {
     const [open, setOpen] = useState(false);
     const [userName, setUserName] = useState("Đăng Nhập");

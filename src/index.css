@@ -32,14 +32,12 @@ body {
 
 
 
-@media screen and (min-width:690px) {
+@media screen and (min-width:500px) {
 
 
   ::-webkit-scrollbar {
     width: 5px;
   }
-
-
 
   ::-webkit-scrollbar-thumb {
     background: #13C0BF;

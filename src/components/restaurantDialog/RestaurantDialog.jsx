@@ -11,7 +11,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { RestaurantAPI } from '../../HTTP/BaeminHttp';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRestaurantDialog } from '../../store/dialog';
-import { addDishesToCart } from '../../store/cartSlice'
+import { addDishesToCart, inCreaseQty, deCreaseQty, clearCart } from '../../store/cartSlice'
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import ShoppingBasketRoundedIcon from '@mui/icons-material/ShoppingBasketRounded';
@@ -21,7 +21,14 @@ import { CloseOutlined } from '@mui/icons-material';
 const RestaurantDialog = () => {
     const idRestaurant = useSelector(state => state.dialog.idRestaurant);
     const open = useSelector(state => state.dialog.restaurantDialog);
-    const listDishes = useSelector(state => state.cart.dishes);
+
+    var Cart = useSelector(state => state.cart);
+    var Cart = Cart?.CartList?.find(merchant => {
+        return merchant?.resData?.resId === idRestaurant ? merchant : null;
+    });
+    const cartTotalPrice = Cart?.totalPrice || 0;
+    const listDishes = Cart?.dishes || [];
+
     const dispatch = useDispatch();
     const matches = useMediaQuery('(max-width:500px)');
     const matchesMD = useMediaQuery('(max-width:770px)');
@@ -50,10 +57,17 @@ const RestaurantDialog = () => {
         setDialogOption(true)
     }
     useEffect(() => {
-        console.log(listDishes);
+        // console.log(listDishes);
     }, [listDishes]);
-
-
+    const handleQtyDown = (index) => {
+        dispatch(deCreaseQty({ idRestaurant, index }));
+    }
+    const handleQtyUp = (index) => {
+        dispatch(inCreaseQty({ idRestaurant, index }));
+    }
+    const handleClearCart = () => {
+        dispatch(clearCart(idRestaurant));
+    }
     return (
         <>
             <Dialog open={open} onClose={() => setOpen(false)} maxWidth={"xl"} fullWidth={true} fullScreen={matchesMD || matches}>
@@ -120,38 +134,41 @@ const RestaurantDialog = () => {
                                             <ShoppingBasketRoundedIcon />
                                             <span>{listDishes?.reduce((total, item) => total + item?.quantity, 0)}</span>
                                         </div>
-                                        <div>Thanh toán: {listDishes?.reduce((total, item) => total + item?.price, 0)?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
+                                        <div>Tổng: {
+                                            cartTotalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
                                         {
                                             dialogCart &&
                                             <div className='boxCart'>
                                                 <div className='boxCartBar'>
                                                     <CloseOutlined className='closeCartDiv' onClick={() => setDialogCart(false)} />
                                                     <span>Giỏ hàng</span>
-                                                    <span>Xoá</span></div>
-                                                {
-                                                    listDishes?.map((item, index) => {
+                                                    <span onClick={() => handleClearCart()}>Xoá</span></div>
+                                                <div className='boxListCart'>{
+                                                    listDishes?.map((dish, index) => {
 
+                                                        var totalPrice = dish?.price * dish.quantity;
                                                         var description = [];
-                                                        item?.options?.forEach((item) => {
-                                                            item?.items?.forEach(item => {
+                                                        dish?.options?.forEach((option) => {
+                                                            option?.items?.forEach(item => {
                                                                 description.push(item?.name)
+                                                                totalPrice += item?.price * item.quantity;
                                                             })
                                                         })
 
                                                         return <div className='divCart' key={index}>
-                                                            <p>{item?.name}</p>
+                                                            <p>{dish?.name}</p>
                                                             <p>{description.join(", ")}</p>
                                                             <div className='cartPriceQty'>
-                                                                <span>{item?.price?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span>
+                                                                <span>{totalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span>
                                                                 <div className='boxOpsLeft boxOpsMulti'>
-                                                                    <div  ><RemoveRoundedIcon sx={{ fontSize: "14px!important" }} /></div>
-                                                                    <div className='divOpsQuantity'>{item?.quantity}</div>
-                                                                    <div  ><AddRoundedIcon sx={{ fontSize: "14px!important" }} /></div>
+                                                                    <div onClick={() => handleQtyDown(index)} ><RemoveRoundedIcon sx={{ fontSize: "14px!important" }} /></div>
+                                                                    <div className='divOpsQuantity'>{dish?.quantity}</div>
+                                                                    <div onClick={() => handleQtyUp(index)} ><AddRoundedIcon sx={{ fontSize: "14px!important" }} /></div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     })
-                                                }
+                                                }</div>
                                             </div>
                                         }
                                     </div>
@@ -175,7 +192,7 @@ const RestaurantDialog = () => {
                                                             <div className='resTaurantDisDes' onClick={() => handleSelectDishes(item)}>
                                                                 <p >{item?.name}</p>
                                                                 <p className='resTaurantDisDesP1'><i><strike>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</strike></i>  </p>
-                                                                <p className='resTaurantDisDesP1' style={{ fontWeight: 'bold' }}>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
+                                                                <p className='resTaurantDisDesP1' style={{ fontWeight: 'bold' }}>{item?.price?.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
                                                             </div>
                                                         </div>
                                                     }
@@ -205,7 +222,7 @@ const RestaurantDialog = () => {
                                                                         <p className=' resTaurantDisDesP1 '>{item?.name}</p>
                                                                         <p className='resTaurantDisDesP1 resTaurantDisDesP'>{item?.description?.replace(/\&nbsp;/g, " ")}</p>
                                                                         <p className='resTaurantDisDesP1'><i><strike>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</strike></i>  </p>
-                                                                        <p className='resTaurantDisDesP1' style={{ fontWeight: 'bold' }}>{item?.originalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
+                                                                        <p className='resTaurantDisDesP1' style={{ fontWeight: 'bold' }}>{item?.price?.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </p>
                                                                     </div>
                                                                 </div>
                                                             }
@@ -225,20 +242,29 @@ const RestaurantDialog = () => {
             </Dialog>
             {
                 dialogOption &&
-                <SelectOptions setDialogOption={setDialogOption} dialogOption={dialogOption} optionData={optionData} fullScreen={matchesMD || matches}  ></SelectOptions>
+                <SelectOptions setDialogOption={setDialogOption} dialogOption={dialogOption}
+                    optionData={optionData}
+                    fullScreen={matchesMD || matches}
+                    resData={{
+                        resId: dataRestaurant?.id,
+                        resName: dataRestaurant?.name,
+                        resImage: dataRestaurant?.imageUrl,
+                        resAddress: dataRestaurant?.address
+                    }}  >
+
+                </SelectOptions>
             }
         </>
     );
 }
 
 
-function SelectOptions({ optionData, setDialogOption, dialogOption, fullScreen }) {
+function SelectOptions({ optionData, setDialogOption, dialogOption, fullScreen, resData }) {
+
     const dispatch = useDispatch();
-    const uniqueId = generateRandomString(11);
     const [dishes, setDishes] = useState({
         quantity: 1,
         dishId: optionData?.id,
-        uniqueId: uniqueId.toLowerCase(),
         options: null,
         totalPrice: 0,
         name: optionData?.name
@@ -250,7 +276,6 @@ function SelectOptions({ optionData, setDialogOption, dialogOption, fullScreen }
         setDishes({
             quantity: 1,
             dishId: optionData?.id,
-            uniqueId: uniqueId.toLowerCase(),
             options: null,
             name: optionData?.name
         })
@@ -264,7 +289,6 @@ function SelectOptions({ optionData, setDialogOption, dialogOption, fullScreen }
             setDishes({
                 quantity: dishes?.quantity || 1,
                 dishId: optionData?.id,
-                uniqueId: uniqueId.toLowerCase(),
                 options: options || null,
                 name: optionData?.name
             })
@@ -288,9 +312,8 @@ function SelectOptions({ optionData, setDialogOption, dialogOption, fullScreen }
             else {
                 var items = options[checkOption]?.items;
                 const checkItem = items?.findIndex((itemF) => itemF?.itemId === item?.id)
-
                 if (checkItem >= 0) {
-                    items[checkItem] = { ...item[checkItem], quantity: itemQty }
+                    items[checkItem] = { ...items[checkItem], quantity: itemQty }
                 } else {
                     items = [
                         ...items,
@@ -323,11 +346,9 @@ function SelectOptions({ optionData, setDialogOption, dialogOption, fullScreen }
         setDishes({
             quantity: dishes?.quantity || 1,
             dishId: optionData?.id,
-            uniqueId: uniqueId.toLowerCase(),
             options: options || null,
             name: optionData?.name,
         })
-
     }
     const handleQtyUp = () => {
         setDishes({ ...dishes, quantity: dishes?.quantity + 1 })
@@ -348,10 +369,15 @@ function SelectOptions({ optionData, setDialogOption, dialogOption, fullScreen }
         totalOptionPrice += dishes?.quantity * optionData?.price;
         setPricePreview(totalOptionPrice)
     }, [dishes]);
-
     const handleSelectDishes = () => {
         if (dishes?.quantity > 0)
-            dispatch(addDishesToCart({ ...dishes, price: pricePreview }))
+            dispatch(addDishesToCart({
+                dishes: {
+                    ...dishes,
+                    price: optionData?.price
+                },
+                resData: resData
+            }))
         handleCloseDialog(false)
     }
 

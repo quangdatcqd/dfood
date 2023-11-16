@@ -5,7 +5,6 @@ export const showDialog = createSlice({
     name: 'dialog',
     initialState: {
         restaurantDialog: false,
-        checkoutDialog: false,
         idRestaurant: null,
     },
     reducers: {
@@ -16,13 +15,10 @@ export const showDialog = createSlice({
         setRestaurantId: (state, action) => {
             state.idRestaurant = action.payload;
             state.restaurantDialog = true;
-        },
-        setCheckoutDialog: (state, action) => {
-            state.checkoutDialog = action.payload
         }
     },
 });
 
-export const { setRestaurantDialog, setCheckoutDialog, setRestaurantId } = showDialog.actions;
+export const { setRestaurantDialog, setRestaurantId } = showDialog.actions;
 
 export default showDialog.reducer;

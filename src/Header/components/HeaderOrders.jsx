@@ -11,14 +11,14 @@ const HeaderOrders = () => {
         }
         fetchData()
     }, []);
-    return
-    {
-        listOrders?.code === 401 &&
+    return <>
+        {
+            listOrders?.code !== 401 &&
             <div className={styleCss.headerButton}>
                 <ReceiptLongIcon />
                 <span>Đơn hàng</span>
                 <div className={styleCss.HeaderOrderBox}>
-                    <p>Đơn hàng của bạn</p>
+                    <p style={{ margin: "10px 0px 0px 15px", padding: "0px", fontSize: "16px", color: "black" }}>Đơn hàng của bạn</p>
 
                     {
                         listOrders?.map((item, index) => {
@@ -35,7 +35,8 @@ const HeaderOrders = () => {
 
                 </div>
             </div>
-    }
+        }
+    </>
 
 }
 
