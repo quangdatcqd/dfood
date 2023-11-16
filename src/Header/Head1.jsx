@@ -9,14 +9,18 @@ import StarRateIcon from '@mui/icons-material/StarRate';
 import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 import partnerIcon from '../assets/images/partner_logo.png'
 import CloseIcon from '@mui/icons-material/Close';
-import Restaurant from '../components/restaurant/Restaurant';
+import { useDispatch } from 'react-redux';
+import { setRestaurantId } from '../store/dialog';
 const Head1 = () => {
     const [searchValue, setSearchValue] = useState("");
     const [searchData, setSearchData] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [openDialog, setOpenDialog] = useState(false);
     const [showBoxSearch, setShowBoxSearch] = useState(false);
-    const [restaurantSelected, setRestaurantSelected] = useState("");
+    const dispatch = useDispatch();
+
+    const setIdRestaurant = (id) => {
+        dispatch(setRestaurantId(id))
+    }
     const [listKeyword, setListKeyword] = useState([
         "Cơm", "Bún đậu", "Bánh tráng", "Chè", "Bánh", "Cơm gà", "Mì",
         "Gà rán", "Cà phê", "Hàn Quốc", "Cơm tấm", "Pizza", "Cháo",
@@ -75,10 +79,6 @@ const Head1 = () => {
     }, []);
 
 
-    const handleSelectRestaurant = (data) => {
-        setOpenDialog(true)
-        setRestaurantSelected(data)
-    }
     return (
         <div className={headerCss.head1Row} id='head1Row'>
             <div className={headerCss.searchItem} id='boxSearch'>
@@ -111,7 +111,7 @@ const Head1 = () => {
                                             {searchData?.docs?.map((item, index) => {
 
                                                 return <div className={headerCss.searchItemResult} key={index} >
-                                                    <div className={headerCss.verticalItem} onClick={() => handleSelectRestaurant(item?.id)}>
+                                                    <div className={headerCss.verticalItem} onClick={() => setIdRestaurant(item?.id)}>
 
                                                         <div className={headerCss?.verticalItemBoxImage}>
                                                             {item?.provideCoupon && <div className={headerCss.promoIcon} style={{ fontSize: 14 }}>PROMO</div>}
@@ -195,7 +195,6 @@ const Head1 = () => {
                     </div>
                 }
             </div>
-            <Restaurant open={openDialog} setOpen={setOpenDialog} idRestaurant={restaurantSelected} />
         </div>
     );
 }

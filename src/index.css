@@ -16,7 +16,7 @@ body {
   background-color: #28adad;
   padding: 8px 9px 6px 9px;
   border-radius: 50px;
-  z-index: 99999999;
+  z-index: 1;
   color: white;
   cursor: pointer;
 

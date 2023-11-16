@@ -102,6 +102,10 @@
     color: #202020;
 }
 
+.itemDescriptionp1 img {
+    margin-bottom: -3px;
+}
+
 .itemDescriptionp2 {
     line-height: 20px;
     font-size: 14px;

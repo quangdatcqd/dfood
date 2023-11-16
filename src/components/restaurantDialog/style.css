@@ -1,5 +1,5 @@
 .containerInfo {
-    background-color: #f2f2f2;
+    background-color: #fcfcfc;
     width: calc(100% - 20px);
     padding: 15px;
     padding-right: 0px;
@@ -21,18 +21,19 @@
     min-width: 330px;
 }
 
+
 .divRestaurantInfo {
     position: absolute;
     z-index: 1;
-    top: 100px;
+    top: 200px;
     width: 100%;
 
 }
 
 .boxRestaurantInfo img {
     width: 100%;
-    height: 150px;
-    object-fit: cover;
+    height: 250px;
+    object-fit: contain;
 }
 
 .divRestaurantDes {
@@ -51,7 +52,7 @@
 
 .btnCloseDialog {
     margin-bottom: 0px;
-    position: absolute;
+    position: fixed;
     z-index: 1;
     left: 0px;
     top: 0px;
@@ -78,11 +79,11 @@
     margin-bottom: -4px;
 }
 
-.divRestaurantDes .restaurantName {
+.restaurantName {
     margin: 8px 0px;
     font-weight: bold;
     text-align: center;
-    font-size: 20px;
+    font-size: 20px !important;
 }
 
 
@@ -93,7 +94,7 @@
 }
 
 .restaurantGrBook {
-    margin-top: 90px;
+    margin-top: 110px;
     display: flex;
     justify-content: space-between;
     font-size: 14px;
@@ -108,16 +109,6 @@
     cursor: pointer;
 }
 
-.dialogCustom {
-    width: 100%;
-    position: absolute;
-    height: 100%;
-    background-color: red;
-    top: 0px;
-    left: 0px;
-    border-radius: 10px;
-    z-index: 1;
-}
 
 .restaurantCoupon {
     display: flex;
@@ -192,13 +183,16 @@
     margin-left: 5px;
 }
 
+.sectionDishes {
+    width: 100%;
+}
+
 .sectionDishesTitle {
     font-size: 18px;
     font-weight: bold;
     padding: 10px 0px 10px 15px;
     color: #0b8282;
     margin: 0px;
-    background-color: #ffffff8c;
 }
 
 .boxRestaurantItem {
@@ -210,16 +204,13 @@
 
 
 
-.restaurantDishesBox {
-    background-color: #ffffff;
-    margin-left: 1px;
-    margin-bottom: 1px;
-}
+
 
 .restaurantDishesBox {
     display: flex;
     padding: 10px 5px;
     position: relative;
+    background-color: #ffffff;
 }
 
 .layerSoldOut {
@@ -278,7 +269,200 @@
 }
 
 .boxSectionDis {
-    margin-bottom: 20px;
+    position: none !important;
+}
+
+
+.divOptionsInfo p {
+    margin: 15px 0px;
+    font-size: 14px;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.requireOptionDes {
+    margin: 0px;
+    font-size: 14px;
+    padding: 0px 15px 10px;
+
+
+
+}
+
+.restaurantNote {
+    width: calc(100% - 24px) !important;
+    border: none;
+    padding: 7px;
+    outline: none;
+    background-color: rgba(241, 241, 241, 0.404);
+    font-size: 14px;
+    margin-top: 10px;
+    height: 70px !important;
+    resize: none;
+    margin: 5px;
+    border-radius: 10px;
+    margin-bottom: 65px;
+}
+
+
+.boxOpsSelectedInfo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    width: calc(100% - 20px);
+    position: absolute;
+    bottom: 0px;
+}
+
+.boxOpsLeft {
+    display: flex;
+    align-items: center;
+}
+
+.boxOpsLeft div {
+    background-color: #ebebeb;
+    border-radius: 8px;
+    color: #13C0BF;
+    margin-right: 2px;
+    padding: 5px 6px 0px 6px;
+    cursor: pointer;
+}
+
+.boxOpsMulti {
+    margin-right: 10px;
+}
+
+.boxOpsMulti div {
+    font-size: 14px !important;
+    padding: 4px 4px 0px 4px;
+    border-radius: 5px;
+
+
+
+}
+
+.divOpsQuantity {
+    background-color: white !important;
+    color: #13C0BF !important;
+    padding-top: 0px !important;
+}
+
+.boxOpsRight {
+    background-color: #13C0BF;
+    padding: 10px 30px;
+    font-weight: bold;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.boxOpsRadio label {
+    width: 100%;
+}
+
+.boxOpsRadio input {
+    margin-left: 0px;
+    margin-right: 5px;
+}
+
+.dishesSlectPreview {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.dishesSlectPreview>div:nth-child(1) {
+    display: flex;
+    align-items: center;
+    color: #13C0BF;
+    border: 2px #13C0BF solid;
+    border-radius: 10px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.dishesSlectPreview>div:nth-child(1) span {
+    font-size: 14px;
+    margin-bottom: -3px;
+    margin-left: 3px;
+}
+
+.dishesSlectPreview>div:nth-child(2) {
+    display: flex;
+    align-items: center;
+    background-color: #13C0BF;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 8px 20px;
+    cursor: pointer;
+}
+
+.boxCart {
+    position: absolute;
+    z-index: 1;
+    width: calc(100% - 10px);
+    bottom: 100px;
+    height: 67vh;
+    left: 5px;
+    padding: 20px 0px;
+    border-radius: 10px;
+    box-shadow: 0px 1px 3px 1px rgba(206, 206, 206, 0.493);
+    background-color: rgb(247, 247, 247);
+
+}
+
+.closeCartDiv {
+    padding: 2px;
+    cursor: pointer;
+    border-radius: 105px;
+}
+
+.closeCartDiv:hover {
+    background-color: rgb(231, 231, 231);
+}
+
+.boxCartBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgb(231, 231, 231);
+
+    padding: 0px 10px 5px 10px;
+}
+
+.boxCartBar>span:nth-child(2) {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.boxCartBar>span:nth-child(3) {
+    color: #13C0BF;
+}
+
+.divCart {
+    padding: 10px;
+    background-color: white;
+}
+
+.divCart>p {
+    margin: 5px 0px;
+    font-size: 14px;
+}
+
+.divCart>p:nth-child(1) {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.cartPriceQty {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
 }
 
 @media screen and (max-width:690px) {
@@ -289,6 +473,7 @@
 
     .boxRestaurantInfo {
         margin-bottom: 10px;
+        width: 100% !important;
     }
 
     .boxRestaurantDis {
@@ -298,7 +483,7 @@
     }
 
     .restaurantGrBook {
-        margin-top: 70px;
+        margin-top: 85px;
     }
 
     .restaurantDishesBox {
@@ -312,20 +497,69 @@
 
     .sectionDishesTitle {
         padding-left: 10px;
-        background-color: #f2f2f2;
 
     }
+
+    .requireOptionDes {
+        padding-left: 10px;
+    }
+
+    .restaurantNote {
+        margin-bottom: 10px;
+    }
+
+    .boxRestaurantInfo .boxOpsSelectedInfo {
+        position: fixed;
+        left: 0px;
+        z-index: 1;
+        background-color: white;
+        padding-bottom: 10px;
+        width: calc(100% - 100px) !important;
+        padding: 15px 50px 40px 50px;
+        justify-content: space-around;
+    }
+
+    .dishesSlectPreview {
+        position: fixed;
+        left: 0px;
+        z-index: 2;
+        bottom: 0px;
+        background-color: white;
+        width: 100%;
+        padding: 20px 10px 50px;
+
+
+    }
+
 }
 
 
 @media screen and (max-width:500px) {
+    .boxRestaurantInfo .boxOpsSelectedInfo {
+        width: calc(100% - 20px) !important;
+        padding: 10px 10px 50px;
+        justify-content: space-between;
+    }
+
+    .dishesSlectPreview {
+        position: fixed;
+        left: 0px;
+        z-index: 2;
+        bottom: 0px;
+        background-color: white;
+        width: calc(100% - 40px);
+        padding: 10px 20px 50px;
+        justify-content: space-between;
+
+    }
+
     .containerInfo {
         padding: 0 !important;
         width: calc(100%);
     }
 
     .restaurantGrBook {
-        margin-top: 90px;
+        margin-top: 100px;
     }
 
     .btnCloseDialog {

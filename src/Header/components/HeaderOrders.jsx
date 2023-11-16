@@ -11,29 +11,32 @@ const HeaderOrders = () => {
         }
         fetchData()
     }, []);
-    return (
-        <div className={styleCss.headerButton}>
-            <ReceiptLongIcon />
-            <span>Đơn hàng</span>
-            <div className={styleCss.HeaderOrderBox}>
-                <p>Đơn hàng của bạn</p>
+    return
+    {
+        listOrders?.code === 401 &&
+            <div className={styleCss.headerButton}>
+                <ReceiptLongIcon />
+                <span>Đơn hàng</span>
+                <div className={styleCss.HeaderOrderBox}>
+                    <p>Đơn hàng của bạn</p>
 
-                {
-                    listOrders?.map((item, index) => {
-                        const method = item?.payment?.method == "CASH" ? "Tiền mặt" : "";
-                        const grandTotalPrice = item?.grandTotalPrice?.toLocaleString("vi", { style: "currency", currency: "VND" });
-                        const dishes = item?.dishes;
-                        return <div className={styleCss.HeaderNotiItem} key={index}>
-                            <p>{item?.fromName}</p>
-                            <span >{grandTotalPrice} ({method}) - {dishes?.length} Món</span>
-                        </div>
-                    })
+                    {
+                        listOrders?.map((item, index) => {
+                            const method = item?.payment?.method == "CASH" ? "Tiền mặt" : "";
+                            const grandTotalPrice = item?.grandTotalPrice?.toLocaleString("vi", { style: "currency", currency: "VND" });
+                            const dishes = item?.dishes;
+                            return <div className={styleCss.HeaderNotiItem} key={index}>
+                                <p>{item?.fromName}</p>
+                                <span >{grandTotalPrice} ({method}) - {dishes?.length} Món</span>
+                            </div>
+                        })
 
-                }
+                    }
 
+                </div>
             </div>
-        </div>
-    );
+    }
+
 }
 
 export default HeaderOrders;

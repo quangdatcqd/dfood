@@ -10,42 +10,49 @@ import { Box, CircularProgress } from '@mui/material';
 import { useDebouncedCallback } from 'use-debounce';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import partnerIcon from '../assets/images/partner_logo.png'
+import { useDispatch } from 'react-redux';
+import { setRestaurantId } from '../store/dialog';
 function Home() {
 
-    const [homeData, setHomeData] = useState([]);
+    const [homeData, setHomeData] = useState(null);
     const fetchHomeData = async () => {
         const data = await BannerAPI.Coordinates();
         setHomeData(data?.components);
-
     }
     useEffect(() => {
         fetchHomeData();
-
     }, []);
+
     return (
-        <div className={homeCss.row}>
-            <Header />
+        <>
             {
-                homeData?.map((item, index) => {
-                    if ((item?.type === "Banner" || item?.position === 1) && item?.dataBody?.total > 0) {
+                homeData &&
+                <div className={homeCss.row}>
+                    <Header />
+                    {
+                        homeData?.map((item, index) => {
+                            if ((item?.type === "Banner" || item?.position === 1) && item?.dataBody?.total > 0) {
 
-                        return <Banner bannerData={item} key={index} />
+                                return <Banner bannerData={item} key={index} />
+                            }
+                            if (item?.type === "Icon") {
+                                return <BoxCategories menuData={item} key={index} />
+                            }
+                            if (((item?.type === "Countdown Merchant Collection" && item?.header?.isInCountdownTime) || item?.type === "Merchant Collection") && item?.dataBody?.total > 0) return <BoxItems itemData={item} key={index} />
+                            if (item?.type === "Campaign Group" && item?.dataBody?.total > 0) {
+                                return <BoxItemPaymentPromo itemData={item} key={index} />
+                            }
+                            if (item?.type === "Reorder Merchants" && item?.dataBody?.total > 0) return <ReorderMerchant itemData={item} key={index} />
+                            if (item?.type === "Merchant Listing" && item?.dataBody?.total > 0) return <VerticalList itemData={item} key={index} />
+
+                        })
                     }
-                    if (item?.type === "Icon") {
-                        return <BoxCategories menuData={item} key={index} />
-                    }
-                    if (((item?.type === "Countdown Merchant Collection" && item?.header?.isInCountdownTime) || item?.type === "Merchant Collection") && item?.dataBody?.total > 0) return <BoxItems itemData={item} key={index} />
-                    if (item?.type === "Campaign Group" && item?.dataBody?.total > 0) {
-                        return <BoxItemPaymentPromo itemData={item} key={index} />
-                    }
-                    if (item?.type === "Reorder Merchants" && item?.dataBody?.total > 0) return <ReorderMerchant itemData={item} key={index} />
-                    if (item?.type === "Merchant Listing" && item?.dataBody?.total > 0) return <VerticalList itemData={item} key={index} />
-                    return <></>;
-                })
+                    <ScrollToTop />
+
+                </div>
             }
-            <ScrollToTop />
+        </>
 
-        </div>
     );
 }
 
@@ -78,6 +85,11 @@ function VerticalList({ itemData }) {
     const [loadingMB, setLoadingMB] = useState(false);
     const currentPage = useRef(itemData?.dataBody?.page);
     const isLastPage = useRef(false);
+    const dispatch = useDispatch();
+
+    const setIdRestaurant = (id) => {
+        dispatch(setRestaurantId(id))
+    }
     const handleLastpage = useDebouncedCallback(async () => {
 
         isLastPage.current = true;
@@ -111,7 +123,7 @@ function VerticalList({ itemData }) {
         <div className={homeCss.verticalList}>
             {verticalList?.map((item, index) => {
 
-                return <div className={homeCss.verticalItem} key={index}>
+                return <div className={homeCss.verticalItem} key={index} onClick={() => setIdRestaurant(item?.dataBody?.docs[0]?.id)}>
 
                     {item?.dataBody?.docs[0]?.properties?.hasPromotion && <div className={homeCss.promoIcon} style={{ fontSize: 14 }}>PROMO</div>}
                     <img alt="Món ăn" className={homeCss.verticalItemImage} src={item?.dataBody?.docs[0]?.imageUrl}></img>
@@ -260,12 +272,77 @@ const responsiveitem = {
 };
 
 function BoxItems({ itemData }) {
+    const dispatch = useDispatch();
+    const [isOutCountDown, setIsOutCountDown] = useState(false);
+    const setIdRestaurant = (id) => {
+        dispatch(setRestaurantId(id))
+    }
+    if (!isOutCountDown)
+        return <div className={homeCss.container}>
+            <div className={homeCss.titleMerchantCollection}>{
+                itemData?.header?.timeSlots?.times[0]?.end ?
+                    <>
+                        <Countdown endTime={itemData?.header?.timeSlots?.times[0]?.end} setIsOutCountDown={setIsOutCountDown} />
+                        <p   >{itemData?.description}</p>
+                    </>
+                    :
+                    <>
+                        <p>{itemData?.title}</p>
+                        <span   >{itemData?.description}</span></>
+            }
+
+
+            </div>
+            {
+                <Carousel responsive={responsiveitem} className={homeCss.boxItem} autoPlay={false} autoPlaySpeed={4000} itemClass={homeCss.boxItemLi} removeArrowOnDeviceType={"mobile"} rewind={true} rewindWithAnimation={true}    >
+                    {itemData?.dataBody?.docs?.map((item, index) => {
+                        return <div className={homeCss.itemInfo} key={index} onClick={() => {
+                            setIdRestaurant(item?.dataBody?.docs?.length > 0 && item?.dataBody?.docs[0]?.id)
+                        }
+                        }>
+                            {item?.dataBody?.docs[0]?.properties?.hasPromotion && <div className={homeCss.promoIcon}>PROMO</div>}
+
+                            <img alt="Món ăn" className={homeCss.itemImage} src={item?.dataBody?.docs[0]?.imageUrl}></img>
+
+                            <div className={homeCss.itemDescription}>
+                                <p className={homeCss.itemDescriptionp1}>
+                                    {
+                                        item?.dataBody?.docs[0]?.properties?.isPartner && <img alt="Món ăn" width={20} src={partnerIcon} />
+                                    }
+                                    {item?.dataBody?.docs[0]?.title}</p>
+                                <p className={homeCss.itemDescriptionp2}>
+                                    {
+                                        item?.dataBody?.docs[0]?.properties?.rate && <span style={{ marginLeft: 18 }}>
+                                            <StarRateIcon />
+                                            {item?.dataBody?.docs[0]?.properties?.rate} <span style={{ color: "gray" }}>
+                                                ({item?.dataBody?.docs[0]?.properties?.totalRatings})</span> -
+
+                                        </span>
+                                    }
+                                    &nbsp;{(item?.dataBody?.docs[0]?.properties?.distance / 1000).toFixed(2)}km
+                                </p>
+                            </div>
+                        </div>
+
+                    })}
+                    <div className={homeCss.itemMoreButton} key={"sdf"}>
+                        <ArrowForwardIcon sx={{ fontSize: 30, marginBottom: 1 }} />
+                        <span>Xem tất cả</span>
+                    </div>
+                </Carousel>
+
+            }
+        </div >
+}
+
+
+function Countdown({ endTime, setIsOutCountDown }) {
+    const timeInterval = useRef(null);
     const [timeFlashSale, setTimeFlashSale] = useState({
         hours: 0,
         minutes: 0,
         seconds: 0
     });
-    const timeInterval = useRef(null);
     function countdownToEndTime(endTime) {
         // Get the current time
         var currentTime = new Date();
@@ -279,6 +356,7 @@ function BoxItems({ itemData }) {
         // Check if the end time has already passed
         if (endTimeDate <= currentTime) {
             console.log("The end time has already passed!");
+            setIsOutCountDown(true)
             return;
         }
 
@@ -301,88 +379,43 @@ function BoxItems({ itemData }) {
                 // Stop the interval for the countdown
                 clearInterval(timeInterval.current);
                 console.log("The time has ended!");
+                setIsOutCountDown(true)
             }
         }, 1000);
     }
 
-
-
     // Gọi hàm countdown với thời gian start là 607 và end là 700
     useEffect(() => {
-
-        countdownToEndTime(itemData?.header?.timeSlots?.times[0]?.end);
+        endTime &&
+            countdownToEndTime(endTime);
         return () => {
             clearInterval(timeInterval.current)
         };
     }, []);
-    return <div className={homeCss.container}>
-        <div className={homeCss.titleMerchantCollection}>
-            {
-                timeFlashSale?.hours !== "NaN" ?
-                    <>
-                        <div className={homeCss.itemFlashSale}>
-                            <span style={{ marginRight: 10 }}>FLASH SALE</span>
-                            <span className={homeCss.itemFlashSaleSpanBG}>{timeFlashSale.hours}</span>
-                            <span>:</span>
-                            <span className={homeCss.itemFlashSaleSpanBG}>{timeFlashSale.minutes}</span>
-                            <span>:</span>
-                            <span className={homeCss.itemFlashSaleSpanBG}>{timeFlashSale.seconds}</span>
-                        </div>
-                        <p style={{ marginTop: 10 }}>{itemData?.description}</p>
-                    </>
-                    :
-                    <>
-                        <p>{itemData?.title}</p>
-                        <span   >{itemData?.description}</span>
-                    </>
-            }
 
-
-        </div>
+    return <>
         {
-            <Carousel responsive={responsiveitem} className={homeCss.boxItem} autoPlay={false} autoPlaySpeed={4000} itemClass={homeCss.boxItemLi} removeArrowOnDeviceType={"mobile"} rewind={true} rewindWithAnimation={true}    >
-                {itemData?.dataBody?.docs?.map((item, index) => {
-                    return <div className={homeCss.itemInfo} key={index}>
-                        {item?.dataBody?.docs[0]?.properties?.hasPromotion && <div className={homeCss.promoIcon}>PROMO</div>}
-
-                        <img alt="Món ăn" className={homeCss.itemImage} src={item?.dataBody?.docs[0]?.imageUrl}></img>
-
-                        <div className={homeCss.itemDescription}>
-                            <p className={homeCss.itemDescriptionp1}>
-                                {
-                                    item?.dataBody?.docs[0]?.properties?.isPartner && <img alt="Món ăn" width={20} src={partnerIcon} />
-                                }
-                                {item?.dataBody?.docs[0]?.title}</p>
-                            <p className={homeCss.itemDescriptionp2}>
-                                {
-                                    item?.dataBody?.docs[0]?.properties?.rate && <span style={{ marginLeft: 18 }}>
-                                        <StarRateIcon />
-                                        {item?.dataBody?.docs[0]?.properties?.rate} <span style={{ color: "gray" }}>
-                                            ({item?.dataBody?.docs[0]?.properties?.totalRatings})</span> -
-
-                                    </span>
-                                }
-                                &nbsp;{(item?.dataBody?.docs[0]?.properties?.distance / 1000).toFixed(2)}km
-                            </p>
-                        </div>
-                    </div>
-
-                })}
-                <div className={homeCss.itemMoreButton} key={"sdf"}>
-                    <ArrowForwardIcon sx={{ fontSize: 30, marginBottom: 1 }} />
-                    <span>Xem tất cả</span>
+            timeFlashSale?.hours !== "NaN" &&
+            <>
+                <div className={homeCss.itemFlashSale}>
+                    <span style={{ marginRight: 10 }}>FLASH SALE</span>
+                    <span className={homeCss.itemFlashSaleSpanBG}>{timeFlashSale.hours}</span>
+                    <span>:</span>
+                    <span className={homeCss.itemFlashSaleSpanBG}>{timeFlashSale.minutes}</span>
+                    <span>:</span>
+                    <span className={homeCss.itemFlashSaleSpanBG}>{timeFlashSale.seconds}</span>
                 </div>
-            </Carousel>
+            </>
 
         }
-    </div>
+    </>
 }
 
 
 
 
-
 function BoxCategories({ menuData }) {
+
     return <div className={homeCss.container}>
         <div className={homeCss.boxCategories}>
             {
